@@ -45,6 +45,13 @@ Details will be added once the fixes are deployed.
 | 2026-10 | `MetricOmmSwapQuoter` single-hop exact-output quotes return a partial fill instead of reverting when the requested output exceeds pool depth. The router rejects the resulting swap. | Known. No funds at risk |
 | 2026-10 | `MultiplierOracle` feed creation is permissionless and does not bind a token to its underlying asset. | By design. Each pool's curator chooses its price provider |
 | 2026-10 | Pools may use custom price providers that are not published by Metric. | By design. Each pool's curator chooses its price provider |
+| 2026-11 | Stop-loss extension (`OracleValueStopLossExtension`): watermarks are not seeded when liquidity is added. They initialise on the first swap that touches a live bin, so that swap is not drawdown-protected. | By design. Documented in the contract header |
+| 2026-11 | Stop-loss extension: watermarks are not cleared when liquidity is removed. An emptied bin keeps its old watermark until a later swap crosses it, so liquidity re-added before that crossing can block swaps. After the crossing resets the watermark, the next swap on that bin is again unprotected. | By design. Documented in the contract header |
+| 2026-11 | Stop-loss extension: only bins crossed by a swap are checked, a breach blocks only the affected direction, watermarks decay lazily per bin, and a drawdown setting of 0 disables the check. | By design. Documented in the contract header |
+| 2026-11 | Oracle `register()` clears the blacklist flag of the pool being registered once the registration fee is paid. Overpayment is not refunded. | By design. Documented in the contract |
+| 2026-11 | Updater grants on a price provider remain in place after the provider's ownership is transferred. | By design. The new owner can revoke them |
+| 2026-11 | A multi-hop quote path may visit the same pool more than once. | By design |
+| 2026-11 | The factory's cap on `bidAskRefAsymmetryX8` applies at pool creation only, and a value of `type(uint16).max` disables the check. | By design. Documented in the factory |
 
 ### Web, app and API
 
